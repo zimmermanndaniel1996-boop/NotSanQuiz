@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { PAL_PASSWORD } from "../lib/palConfig";
 import { getAllStudentsWithProgress } from "../lib/progressApi";
 import { percentSecure, percentStarted, progressRowsToMap } from "../lib/progressStats";
 import ProgressRing from "./ProgressRing";
@@ -14,6 +13,7 @@ export default function PalContent({ categories }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
   const [authError, setAuthError] = useState(null);
+  const [authenticating, setAuthenticating] = useState(false);
 
   const [students, setStudents] = useState(null);
   const [loadError, setLoadError] = useState(null);
@@ -34,15 +34,26 @@ export default function PalContent({ categories }) {
       .catch((err) => setLoadError(err.message));
   }, [authenticated]);
 
-  function handlePasswordSubmit(e) {
+  async function handlePasswordSubmit(e) {
     e.preventDefault();
-    if (passwordInput === PAL_PASSWORD) {
-      window.sessionStorage.setItem(SESSION_KEY, "true");
-      setAuthenticated(true);
-      setAuthError(null);
-    } else {
-      setAuthError("Falsches Passwort.");
+    setAuthenticating(true);
+    setAuthError(null);
+
+    const res = await fetch("/api/pal/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password: passwordInput }),
+    });
+    const data = await res.json();
+
+    setAuthenticating(false);
+    if (!res.ok) {
+      setAuthError(data.error || "Anmeldung fehlgeschlagen.");
+      return;
     }
+
+    window.sessionStorage.setItem(SESSION_KEY, "true");
+    setAuthenticated(true);
   }
 
   if (!checkedSession) return null;
@@ -65,8 +76,8 @@ export default function PalContent({ categories }) {
             onChange={(e) => setPasswordInput(e.target.value)}
             autoFocus
           />
-          <button type="submit" className="primary-button">
-            Bestätigen
+          <button type="submit" className="primary-button" disabled={authenticating}>
+            {authenticating ? "Einen Moment..." : "Bestätigen"}
           </button>
         </form>
         {authError && <p className="name-error">{authError}</p>}
