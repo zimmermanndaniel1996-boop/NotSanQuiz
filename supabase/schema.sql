@@ -46,3 +46,24 @@ create policy "public read/write progress" on progress
 -- Hashes einsehen.
 revoke select, insert, update, delete on students from anon, authenticated;
 grant select (id, name, created_at) on students to anon, authenticated;
+
+-- Freies Feedback (z. B. für einen Usertest). Jeder darf welches abschicken,
+-- aber NICHT das Feedback anderer lesen - sonst könnte jeder im Browser
+-- fremdes (ggf. anonymes) Feedback einsehen. Der PAL-Bereich liest es über
+-- /api/pal/feedback mit dem Service-Role-Key, der Row Level Security umgeht.
+create table if not exists feedback_responses (
+  id uuid primary key default gen_random_uuid(),
+  student_id uuid references students(id) on delete set null,
+  student_name text,
+  is_anonymous boolean not null default false,
+  message text not null,
+  created_at timestamptz not null default now()
+);
+
+alter table feedback_responses enable row level security;
+
+create policy "public insert feedback" on feedback_responses
+  for insert with check (true);
+
+revoke select, update, delete on feedback_responses from anon, authenticated;
+grant insert on feedback_responses to anon, authenticated;

@@ -18,6 +18,7 @@ export default function PalContent({ categories }) {
   const [students, setStudents] = useState(null);
   const [loadError, setLoadError] = useState(null);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
+  const [view, setView] = useState("students");
 
   useEffect(() => {
     if (window.sessionStorage.getItem(SESSION_KEY) === "true") {
@@ -114,34 +115,93 @@ export default function PalContent({ categories }) {
       </Link>
       <div className="page-header">
         <h1>PAL-Bereich</h1>
-        <p>
-          {students.length}{" "}
-          {students.length === 1 ? "angemeldeter Schüler" : "angemeldete Schüler"}
-        </p>
       </div>
-      <div className="student-list">
-        {students.length === 0 && <p>Noch keine Schüler angemeldet.</p>}
-        {students.map((s) => {
-          const progressMap = progressRowsToMap(s.progress);
-          return (
-            <button
-              key={s.id}
-              className="student-row"
-              onClick={() => setSelectedStudentId(s.id)}
-            >
-              <div className="student-row-name">{s.name}</div>
-              <div className="student-row-categories">
-                {categories.map((c) => (
-                  <span key={c.slug}>
-                    {c.emoji} {Math.round(percentSecure(c.questionIds, progressMap))}%
-                  </span>
-                ))}
-              </div>
-            </button>
-          );
-        })}
+
+      <div className="pal-tabs">
+        <button
+          type="button"
+          className={`pal-tab${view === "students" ? " active" : ""}`}
+          onClick={() => setView("students")}
+        >
+          Schüler
+        </button>
+        <button
+          type="button"
+          className={`pal-tab${view === "feedback" ? " active" : ""}`}
+          onClick={() => setView("feedback")}
+        >
+          Feedback
+        </button>
       </div>
+
+      {view === "feedback" ? (
+        <FeedbackList />
+      ) : (
+        <>
+          <p className="pal-tab-hint">
+            {students.length}{" "}
+            {students.length === 1 ? "angemeldeter Schüler" : "angemeldete Schüler"}
+          </p>
+          <div className="student-list">
+            {students.length === 0 && <p>Noch keine Schüler angemeldet.</p>}
+            {students.map((s) => {
+              const progressMap = progressRowsToMap(s.progress);
+              return (
+                <button
+                  key={s.id}
+                  className="student-row"
+                  onClick={() => setSelectedStudentId(s.id)}
+                >
+                  <div className="student-row-name">{s.name}</div>
+                  <div className="student-row-categories">
+                    {categories.map((c) => (
+                      <span key={c.slug}>
+                        {c.emoji} {Math.round(percentSecure(c.questionIds, progressMap))}%
+                      </span>
+                    ))}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
     </main>
+  );
+}
+
+function FeedbackList() {
+  const [feedback, setFeedback] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/pal/feedback")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) setError(data.error);
+        else setFeedback(data.feedback);
+      })
+      .catch((err) => setError(err.message));
+  }, []);
+
+  if (error) return <p className="name-error">Fehler beim Laden: {error}</p>;
+  if (!feedback) return <p>Lädt …</p>;
+  if (feedback.length === 0) return <p>Noch kein Feedback abgegeben.</p>;
+
+  return (
+    <div className="feedback-list">
+      {feedback.map((entry) => (
+        <div key={entry.id} className="feedback-entry">
+          <div className="feedback-entry-header">
+            <strong>{entry.name || "Anonym"}</strong>
+            <span className="feedback-entry-date">
+              {new Date(entry.created_at).toLocaleDateString("de-DE")}
+            </span>
+          </div>
+          <p className="feedback-message">{entry.message}</p>
+        </div>
+      ))}
+    </div>
   );
 }
 

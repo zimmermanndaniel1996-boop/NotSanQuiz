@@ -58,6 +58,12 @@ export default function HomeContent({ categories }) {
           <span className="mode-title">Leitlinien</span>
           <span className="mode-desc">Aktuelle Leitlinien nachschlagen</span>
         </Link>
+
+        <Link href="/feedback" className="mode-tile">
+          <span className="emoji">💬</span>
+          <span className="mode-title">Feedback</span>
+          <span className="mode-desc">Sag uns, was du von der App hältst</span>
+        </Link>
       </div>
 
       <div className="progress-section">
