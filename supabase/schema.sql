@@ -84,10 +84,27 @@ create table if not exists brain_scores (
   student_name text not null,
   score int not null check (score >= 0 and score <= 450),
   created_at timestamptz not null default now(),
-  week_key text generated always as (
-    to_char((created_at at time zone 'UTC'), 'IYYY-"W"IW')
-  ) stored
+  week_key text
 );
+
+-- Postgres erlaubt in einer generierten Spalte nur "immutable" Ausdrücke,
+-- aber jede Datums-/Zeitformatierung (to_char, extract, ...) zählt dort
+-- nicht dazu. Ein Trigger hat diese Einschränkung nicht und setzt
+-- week_key stattdessen beim Einfügen automatisch.
+create or replace function set_brain_score_week_key()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.week_key := to_char((new.created_at at time zone 'UTC'), 'IYYY-"W"IW');
+  return new;
+end;
+$$;
+
+create trigger brain_scores_set_week_key
+  before insert on brain_scores
+  for each row
+  execute function set_brain_score_week_key();
 
 create index if not exists brain_scores_created_idx on brain_scores (created_at);
 
