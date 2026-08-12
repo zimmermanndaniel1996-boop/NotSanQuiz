@@ -7,7 +7,9 @@ create table if not exists brain_scores (
   student_name text not null,
   score int not null check (score >= 0 and score <= 450),
   created_at timestamptz not null default now(),
-  week_key text generated always as (to_char(created_at, 'IYYY-"W"IW')) stored
+  week_key text generated always as (
+    to_char((created_at at time zone 'UTC'), 'IYYY-"W"IW')
+  ) stored
 );
 
 create index if not exists brain_scores_created_idx on brain_scores (created_at);
