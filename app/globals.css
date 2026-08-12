@@ -59,6 +59,13 @@ main {
   font-size: 1.05rem;
 }
 
+.logo-badge {
+  width: 88px;
+  height: 88px;
+  display: block;
+  margin: 0 auto 16px;
+}
+
 /* Ruhiger Sinusrhythmus-Streifen unter dem Titel der Startseite */
 .rhythm-strip-wrap {
   max-width: 320px;

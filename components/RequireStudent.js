@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useStudent } from "../context/StudentContext";
+import LogoBadge from "./LogoBadge";
 
 export default function RequireStudent({ children }) {
   const { student, loading, login } = useStudent();
@@ -32,8 +33,9 @@ export default function RequireStudent({ children }) {
   return (
     <main>
       <div className="page-header">
-        <h1>Willkommen</h1>
-        <p>Wie heißt du bzw. wie lautet dein Kürzel?</p>
+        <LogoBadge />
+        <h1>Notsan Quiz</h1>
+        <p>Prüfe deinen Wissensstand</p>
       </div>
 
       <form onSubmit={handleSubmit} className="name-form">
