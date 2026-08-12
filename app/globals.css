@@ -116,9 +116,18 @@ main {
   background: var(--color-surface-hover);
 }
 
-/* Startseite: ein klar hervorgehobener Hauptbutton (Schnellquiz) ... */
-.mode-primary-wrap {
+/* Startseite: klar hervorgehobene Hauptbuttons (Schnellquiz, The Brain) ... */
+.mode-primary-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
   margin-bottom: 16px;
+}
+
+@media (min-width: 480px) {
+  .mode-primary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 .mode-tile-primary {
@@ -516,6 +525,61 @@ main {
 .pal-link:hover {
   text-decoration: underline;
   opacity: 1;
+}
+
+/* "The Brain"-Bestenliste auf der Startseite */
+.brain-leaderboard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-bottom: 32px;
+}
+
+.brain-leaderboard h3 {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.brain-leaderboard-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.brain-leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.brain-leaderboard-rank {
+  color: var(--color-muted);
+  width: 18px;
+}
+
+.brain-leaderboard-name {
+  flex: 1;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brain-crown {
+  font-size: 0.9rem;
+}
+
+.brain-leaderboard-score {
+  font-weight: 700;
+  color: var(--color-primary);
 }
 
 /* Fortschritts-Kreisdiagramme auf der Startseite */

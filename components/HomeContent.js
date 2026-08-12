@@ -8,6 +8,7 @@ import { percentSecure, percentStarted } from "../lib/progressStats";
 import { getCategoryColor } from "../lib/categoryColors";
 import ProgressRing from "./ProgressRing";
 import SinusRhythmStrip from "./SinusRhythmStrip";
+import BrainLeaderboard from "./BrainLeaderboard";
 
 export default function HomeContent({ categories }) {
   const { student, logout } = useStudent();
@@ -45,13 +46,21 @@ export default function HomeContent({ categories }) {
         </div>
       </div>
 
-      <div className="mode-primary-wrap">
+      <div className="mode-primary-grid">
         <Link href="/quiz/schnell" className="mode-tile-primary">
           <span className="emoji">⚡</span>
           <span className="mode-title">Schnellquiz</span>
           <span className="mode-desc">20 gemischte Fragen aus allen Fachbereichen</span>
         </Link>
+
+        <Link href="/brain" className="mode-tile-primary">
+          <span className="emoji">👑</span>
+          <span className="mode-title">The Brain</span>
+          <span className="mode-desc">30 Fragen, Punkte für Tempo &amp; Richtigkeit</span>
+        </Link>
       </div>
+
+      <BrainLeaderboard />
 
       <div className="mode-grid">
         <Link href="/fachbereiche" className="mode-tile">
