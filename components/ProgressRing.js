@@ -1,9 +1,9 @@
-const SIZE = 88;
-const STROKE = 9;
+const SIZE = 84;
+const STROKE = 6;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-export default function ProgressRing({ percent = 0, label, sublabel }) {
+export default function ProgressRing({ percent = 0, label, sublabel, color = "var(--color-ecg)" }) {
   const safePercent = Math.max(0, Math.min(100, percent));
   const offset = CIRCUMFERENCE - (safePercent / 100) * CIRCUMFERENCE;
 
@@ -23,7 +23,7 @@ export default function ProgressRing({ percent = 0, label, sublabel }) {
           cy={SIZE / 2}
           r={RADIUS}
           fill="none"
-          stroke="var(--color-ecg)"
+          stroke={color}
           strokeWidth={STROKE}
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={offset}

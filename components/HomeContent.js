@@ -5,7 +5,9 @@ import Link from "next/link";
 import { useStudent } from "../context/StudentContext";
 import { getProgressForStudent } from "../lib/progressApi";
 import { percentSecure, percentStarted } from "../lib/progressStats";
+import { getCategoryColor } from "../lib/categoryColors";
 import ProgressRing from "./ProgressRing";
+import SinusRhythmStrip from "./SinusRhythmStrip";
 
 export default function HomeContent({ categories }) {
   const { student, logout } = useStudent();
@@ -38,15 +40,20 @@ export default function HomeContent({ categories }) {
       <div className="page-header">
         <h1>Notsan Quiz</h1>
         <p>Prüfe deinen Wissensstand</p>
+        <div className="rhythm-strip-wrap">
+          <SinusRhythmStrip />
+        </div>
       </div>
 
-      <div className="mode-grid">
-        <Link href="/quiz/schnell" className="mode-tile">
+      <div className="mode-primary-wrap">
+        <Link href="/quiz/schnell" className="mode-tile-primary">
           <span className="emoji">⚡</span>
           <span className="mode-title">Schnellquiz</span>
           <span className="mode-desc">20 gemischte Fragen aus allen Fachbereichen</span>
         </Link>
+      </div>
 
+      <div className="mode-grid">
         <Link href="/fachbereiche" className="mode-tile">
           <span className="emoji">📚</span>
           <span className="mode-title">Fachbereichs-Quiz</span>
@@ -79,6 +86,7 @@ export default function HomeContent({ categories }) {
               <ProgressRing
                 key={category.slug}
                 percent={percent}
+                color={getCategoryColor(category.slug)}
                 label={`${category.emoji} ${category.title}`}
                 sublabel={`${Math.round(started)}% schon geübt`}
               />

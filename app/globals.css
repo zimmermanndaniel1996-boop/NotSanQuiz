@@ -1,18 +1,21 @@
 :root {
-  --color-bg: #050d1a;
-  --color-surface: #101f36;
-  --color-surface-hover: #16294a;
-  --color-border: #22385c;
-  --color-primary: #2f9bff;
-  --color-primary-dark: #1c6fc4;
-  --color-text: #eaf1fb;
-  --color-muted: #7f93b3;
-  --color-correct: #34e0a1;
-  --color-correct-bg: rgba(52, 224, 161, 0.14);
-  --color-wrong: #ff6b6b;
-  --color-wrong-bg: rgba(255, 107, 107, 0.14);
-  --color-ecg: #34e0a1;
-  --radius: 16px;
+  --color-bg: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f2f4f6;
+  --color-surface-muted: #eef0f3;
+  --color-border: #e0e3e8;
+  --color-text: #171a1f;
+  --color-muted: #667085;
+  --color-ink: #16212c;
+  --color-ink-hover: #22323f;
+  --color-primary: #2f6f62;
+  --color-primary-dark: #234f47;
+  --color-correct: #2f8f5b;
+  --color-correct-bg: #eaf5ee;
+  --color-wrong: #c14b4b;
+  --color-wrong-bg: #fbeaea;
+  --color-ecg: #2f6f62;
+  --radius: 10px;
 }
 
 * {
@@ -26,7 +29,7 @@ body {
 }
 
 body {
-  background: radial-gradient(ellipse 900px 500px at 50% 0%, #0d213d 0%, var(--color-bg) 60%);
+  background: var(--color-bg);
   color: var(--color-text);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -35,18 +38,19 @@ body {
 main {
   max-width: 720px;
   margin: 0 auto;
-  padding: 24px 16px 64px;
+  padding: 32px 16px 64px;
 }
 
 .page-header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 .page-header h1 {
   font-size: clamp(1.6rem, 5vw, 2.2rem);
   margin: 0 0 8px;
   letter-spacing: 0.01em;
+  font-weight: 600;
 }
 
 .page-header p {
@@ -55,46 +59,19 @@ main {
   font-size: 1.05rem;
 }
 
-/* EKG-Streifen ganz oben auf jeder Seite */
-.ecg-banner {
+/* Ruhiger Sinusrhythmus-Streifen unter dem Titel der Startseite */
+.rhythm-strip-wrap {
+  max-width: 320px;
+  margin: 24px auto 0;
+}
+
+.rhythm-strip {
   width: 100%;
-  height: 56px;
-  overflow: hidden;
-  background: linear-gradient(180deg, #0c1c33 0%, #071426 100%);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.ecg-banner-track {
-  display: flex;
-  width: 200%;
-  height: 100%;
-  animation: ecg-scroll 9s linear infinite;
-}
-
-.ecg-banner-track svg {
-  width: 50%;
-  height: 100%;
-  flex-shrink: 0;
+  height: 44px;
   display: block;
-  filter: drop-shadow(0 0 4px var(--color-ecg));
 }
 
-@keyframes ecg-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ecg-banner-track {
-    animation: none;
-  }
-}
-
-/* Kategorie-Kacheln auf der Startseite */
+/* Kategorie-Kacheln auf der Fachbereichsauswahl */
 .category-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -122,28 +99,69 @@ main {
   color: var(--color-text);
   font-size: 1.2rem;
   font-weight: 600;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
   cursor: pointer;
 }
 
 .category-tile:hover,
 .category-tile:focus-visible {
-  transform: translateY(-2px);
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 1px var(--color-primary), 0 10px 28px rgba(47, 155, 255, 0.25);
+  background: var(--color-surface-hover);
 }
 
-/* Die zwei großen Hauptbereich-Buttons auf der Startseite */
+/* Startseite: ein klar hervorgehobener Hauptbutton (Schnellquiz) ... */
+.mode-primary-wrap {
+  margin-bottom: 16px;
+}
+
+.mode-tile-primary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  background: var(--color-ink);
+  border: none;
+  border-radius: var(--radius);
+  padding: 28px 20px;
+  text-decoration: none;
+  color: #ffffff;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.mode-tile-primary:hover,
+.mode-tile-primary:focus-visible {
+  background: var(--color-ink-hover);
+}
+
+.mode-tile-primary .emoji {
+  font-size: 1.5rem;
+}
+
+.mode-tile-primary .mode-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.mode-tile-primary .mode-desc {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 400;
+}
+
+/* ... und zurückhaltendere, umrandete Kacheln für alles andere */
 .mode-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 12px;
 }
 
 @media (min-width: 480px) {
   .mode-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   }
 }
 
@@ -152,38 +170,36 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 6px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 36px 20px;
-  min-height: 180px;
+  padding: 22px 16px;
+  min-height: 120px;
   text-decoration: none;
   color: var(--color-text);
   text-align: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
   cursor: pointer;
 }
 
 .mode-tile:hover,
 .mode-tile:focus-visible {
-  transform: translateY(-2px);
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 1px var(--color-primary), 0 10px 28px rgba(47, 155, 255, 0.25);
+  background: var(--color-surface-hover);
 }
 
 .mode-tile .emoji {
-  font-size: 2.6rem;
+  font-size: 1.5rem;
 }
 
 .mode-tile .mode-title {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.05rem;
+  font-weight: 600;
 }
 
 .mode-tile .mode-desc {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--color-muted);
   font-weight: 400;
 }
@@ -204,13 +220,13 @@ main {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   margin-bottom: 20px;
 }
 
 .quiz-question h2 {
   font-size: 1.25rem;
   margin: 0;
+  font-weight: 600;
 }
 
 .question-code {
@@ -218,7 +234,7 @@ main {
   font-family: ui-monospace, "SF Mono", Consolas, monospace;
   font-size: 0.75rem;
   color: var(--color-muted);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-surface-muted);
   border: 1px solid var(--color-border);
   border-radius: 6px;
   padding: 2px 8px;
@@ -236,7 +252,7 @@ main {
   text-align: left;
   font-size: 1.05rem;
   padding: 16px 18px;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text);
@@ -267,7 +283,7 @@ main {
 }
 
 .feedback-box {
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 16px 18px;
   margin-bottom: 20px;
   font-size: 1rem;
@@ -303,7 +319,7 @@ main {
   width: 100%;
   font: inherit;
   padding: 14px 16px;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text);
@@ -331,18 +347,22 @@ main {
   font-size: 1.1rem;
   font-weight: 600;
   padding: 16px;
-  border-radius: 12px;
+  border-radius: 8px;
   border: none;
-  background: var(--color-primary);
-  color: #04101f;
+  background: var(--color-ink);
+  color: #ffffff;
   cursor: pointer;
   min-height: 56px;
   text-decoration: none;
-  box-shadow: 0 4px 16px rgba(47, 155, 255, 0.3);
 }
 
 .primary-button:hover {
-  background: var(--color-primary-dark);
+  background: var(--color-ink-hover);
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .secondary-button {
@@ -352,10 +372,10 @@ main {
   font-size: 1.05rem;
   font-weight: 600;
   padding: 14px;
-  border-radius: 12px;
-  border: 1px solid var(--color-primary);
-  background: transparent;
-  color: var(--color-primary);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
   min-height: 52px;
   text-decoration: none;
@@ -364,6 +384,7 @@ main {
 
 .secondary-button:hover {
   background: var(--color-surface-hover);
+  border-color: var(--color-primary);
 }
 
 .back-link {
@@ -393,7 +414,6 @@ main {
   border-radius: var(--radius);
   padding: 28px 20px;
   text-align: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 .result-box .score {
@@ -415,7 +435,7 @@ main {
 .name-input {
   font-size: 1.1rem;
   padding: 14px 16px;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text);
@@ -473,7 +493,7 @@ main {
   color: var(--color-primary-dark);
 }
 
-/* Kleiner, unauffälliger PAL-Link unten auf jeder Seite */
+/* Kleiner, unauffälliger PAL-Link ganz unten, ohne eigene Box */
 .pal-link-wrap {
   text-align: center;
   padding: 24px 16px 32px;
@@ -481,9 +501,9 @@ main {
 
 .pal-link {
   color: var(--color-muted);
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   text-decoration: none;
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
 .pal-link:hover {
@@ -493,15 +513,15 @@ main {
 
 /* Fortschritts-Kreisdiagramme auf der Startseite */
 .progress-section {
-  margin-top: 32px;
+  margin-top: 48px;
 }
 
 .progress-section h2 {
-  font-size: 1.05rem;
+  font-size: 1rem;
   color: var(--color-muted);
   text-align: center;
   font-weight: 600;
-  margin: 0 0 16px;
+  margin: 0 0 20px;
 }
 
 .progress-ring-grid {
@@ -519,12 +539,12 @@ main {
 }
 
 .progress-ring-label {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
 }
 
 .progress-ring-sublabel {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--color-muted);
 }
 
@@ -545,15 +565,15 @@ main {
 
 .student-row {
   background: var(--color-surface);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   cursor: pointer;
   border: 1px solid var(--color-border);
   text-align: left;
   width: 100%;
   font: inherit;
   color: inherit;
+  transition: border-color 0.15s ease;
 }
 
 .student-row:hover {
@@ -579,7 +599,6 @@ main {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: 20px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
   margin-bottom: 16px;
 }
 
@@ -618,7 +637,7 @@ main {
 .pal-tab {
   flex: 1;
   padding: 10px 0;
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-muted);
@@ -647,7 +666,7 @@ main {
 .feedback-entry {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 16px;
 }
 
@@ -679,17 +698,15 @@ main {
   display: block;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 18px 20px;
   text-decoration: none;
   color: var(--color-text);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 
 .leitlinie-card:hover {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 1px var(--color-primary), 0 10px 28px rgba(47, 155, 255, 0.25);
 }
 
 .leitlinie-title {
